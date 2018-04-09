@@ -84,7 +84,82 @@
   certFile: master.etcd-client.crt
   keyFile: master.etcd-client.key
   urls:
-  - https://{{ inventory_hostname }}.na.domain.com:2379
+  - https://{{ inventory_hostname }}.domain.com:2379
   - https://{{ master0 }}.domain.com:2379
-  - https://{{ master1 }}.na.domain.com:2379
+  - https://{{ master1 }}.domain.com:2379
  ``` 
+#### Deploy node configuration based off jinja / env including:
+
+```
+
+apiVersion: v1
+dnsBindAddress: 127.0.0.1:53
+dnsRecursiveResolvConf: /etc/origin/node/resolv.conf
+dnsDomain: cluster.local
+dnsIP: {{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}
+dockerConfig:
+  execHandlerName: ""
+iptablesSyncPeriod: "30s"
+imageConfig:
+  format: openshift3/ose-${component}:${version}
+  latest: false
+kind: NodeConfig
+kubeletArguments:
+  enable-controller-attach-detach:
+  - 'true'
+  cpu-cfs-quota:
+  - "false"
+  eviction-hard:
+  - "memory.available<1Gi"
+  image-gc-high-threshold:
+  - "80"
+  image-gc-low-threshold:
+  - "60"
+  kube-reserved:
+  - "cpu={{ ((ansible_processor_vcpus * 100) * 1) }}m,memory={{ ansible_memtotal_mb * 0.05 }}Mi"
+  system-reserved:
+  - "cpu={{ ((ansible_processor_vcpus * 100) * 1) }}m,memory={{ ansible_memtotal_mb * 0.10 }}Mi"
+  max-pods:
+  - "250"
+  serialize-image-pulls:
+  - "false"
+  node-labels:
+  node-labels:
+  - datacenter=lab
+  - region=midwest
+  - zone=appnodes
+  - network_zone=na
+  maximum-dead-containers-per-container:
+  - "2"
+  minimum-container-ttl-duration:
+  - "1m"
+  maximum-dead-containers:
+  - "325"
+masterClientConnectionOverrides:
+  acceptContentTypes: application/vnd.kubernetes.protobuf,application/json
+  contentType: application/vnd.kubernetes.protobuf
+  burst: 200
+  qps: 100
+masterKubeConfig: system:node:{{ inventory_hostname }}.na.bestbuy.com.kubeconfig
+networkPluginName: redhat/openshift-ovs-multitenant
+# networkConfig struct introduced in origin 1.0.6 and OSE 3.0.2 which
+# deprecates networkPluginName above. The two should match.
+networkConfig:
+   mtu: 1450
+   networkPluginName: redhat/openshift-ovs-multitenant
+nodeName: {{ inventory_hostname }}.na.bestbuy.com
+podManifestConfig:
+servingInfo:
+  bindAddress: 0.0.0.0:10250
+  certFile: server.crt
+  clientCA: ca.crt
+  keyFile: server.key
+volumeDirectory: /var/lib/origin/openshift.local.volumes
+proxyArguments:
+  proxy-mode:
+     - iptables
+volumeConfig:
+  localQuota:
+    perFSGroup: 512Mi
+volumeDirectory: /var/lib/origin/openshift.local.volumes
+```

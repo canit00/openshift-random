@@ -124,11 +124,10 @@ kubeletArguments:
   serialize-image-pulls:
   - "false"
   node-labels:
-  node-labels:
-  - datacenter=lab
-  - region=midwest
-  - zone=appnodes
-  - network_zone=na
+  - datacenter=<something>
+  - region=<something>
+  - zone=<something>
+  - network_zone=<something>
   maximum-dead-containers-per-container:
   - "2"
   minimum-container-ttl-duration:
@@ -140,14 +139,14 @@ masterClientConnectionOverrides:
   contentType: application/vnd.kubernetes.protobuf
   burst: 200
   qps: 100
-masterKubeConfig: system:node:{{ inventory_hostname }}.na.bestbuy.com.kubeconfig
+masterKubeConfig: system:node:{{ inventory_hostname }}.domain.com.kubeconfig
 networkPluginName: redhat/openshift-ovs-multitenant
 # networkConfig struct introduced in origin 1.0.6 and OSE 3.0.2 which
 # deprecates networkPluginName above. The two should match.
 networkConfig:
    mtu: 1450
    networkPluginName: redhat/openshift-ovs-multitenant
-nodeName: {{ inventory_hostname }}.na.bestbuy.com
+nodeName: {{ inventory_hostname }}.domain.com
 podManifestConfig:
 servingInfo:
   bindAddress: 0.0.0.0:10250

@@ -78,4 +78,13 @@
           requests:
             cpu: 100m
             memory: 256m
+            
+            etcdClientInfo:
+  ca: master.etcd-ca.crt
+  certFile: master.etcd-client.crt
+  keyFile: master.etcd-client.key
+  urls:
+  - https://{{ inventory_hostname }}.na.domain.com:2379
+  - https://{{ master0 }}.domain.com:2379
+  - https://{{ master1 }}.na.domain.com:2379
  ``` 

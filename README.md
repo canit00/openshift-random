@@ -164,6 +164,8 @@ volumeDirectory: /var/lib/origin/openshift.local.volumes
 ```
 
 #### OpenShift inventory host examples
+```
 3.9 = https://github.com/openshift/openshift-ansible/blob/release-3.9/inventory/hosts.example
 3.10 = https://github.com/openshift/openshift-ansible/blob/release-3.10/inventory/hosts.example
 3.11 = https://github.com/openshift/openshift-ansible/blob/release-3.11/inventory/hosts.example
+```
